@@ -7,14 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Page.BottomAppBar>
-        <CommandBar>
-            <AppBarButton x:Name="AddAppBarButton"
-                          Icon="Add"
-                          Label="Add" />
-        </CommandBar>
-    </Page.BottomAppBar>
-
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -37,14 +29,17 @@
                     </Grid.ColumnDefinitions>
 
                     <CheckBox  VerticalAlignment="Center" />
+                    
                     <Image Grid.Column="1"
                            Source="Assets/background.jpg"
                            Margin="0,0,20,0" />
+                    
                     <TextBlock Grid.Column="2"
                                VerticalAlignment="Center"
                                FontSize="16"
                                TextWrapping="Wrap"
                                Text="完成作业" />
+                    
                     <Line Grid.Column="2"
                           Stretch="Fill"
                           Stroke="Black"
@@ -53,6 +48,7 @@
                           VerticalAlignment="Center"
                           HorizontalAlignment="Stretch"
                           Visibility="Collapsed" />
+                    
                     <AppBarButton Grid.Column="3"
                                   Icon="Setting"
                                   Label="Options"
@@ -69,4 +65,13 @@
             </StackPanel>
         </ScrollViewer>
     </Grid>
+
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton x:Name="AddAppBarButton"
+                          Icon="Add"
+                          Label="Add"
+                          Click="AddAppBarButton_Click"/>
+        </CommandBar>
+    </Page.BottomAppBar>
 </Page>
