@@ -9,7 +9,9 @@
              d:DesignHeight="300"
              d:DesignWidth="400">
 
-    <ListView ItemsSource="{x:Bind tdvm.TodoItems}">
+    <ListView ItemsSource="{x:Bind tdvm.TodoItems}"
+              IsItemClickEnabled="True"
+              ItemClick="ListView_ItemClick">
         <ListView.ItemTemplate>
             <DataTemplate x:DataType="models:TodoItem">
                 <Grid Height="100">

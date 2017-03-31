@@ -31,9 +31,13 @@ namespace Todos {
         }
 
         private void TodoItemCheckBox_Click(object sender, RoutedEventArgs e) {
-            dynamic item = e.OriginalSource;
-            tdvm.ClickedItem = item.DataContext as TodoItem;
+            tdvm.ClickedItem = (e.OriginalSource as CheckBox).DataContext as TodoItem;
             tdvm.ClickedItem.IsChecked = (tdvm.ClickedItem.IsChecked) == 0 ? 1 : 0;
+        }
+
+        private void ListView_ItemClick(object sender, ItemClickEventArgs e) {
+            Frame rootFrame = Window.Current.Content as Frame;
+            rootFrame.Navigate(typeof(EditPage), e.ClickedItem);
         }
     }
 }
