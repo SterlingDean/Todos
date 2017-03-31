@@ -5,3 +5,5 @@
 - 导航
 - Model类和View Model类
 - 数据绑定
+## 下一步实现
+- 基本的业务逻辑：MainPage的Delete，EditPage的Create/Update和Cancel
