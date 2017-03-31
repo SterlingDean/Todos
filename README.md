@@ -7,3 +7,5 @@
 - 数据绑定
 ## 下一步实现
 - 基本的业务逻辑：MainPage的Delete，EditPage的Create/Update和Cancel
+- MainPage的Adaptive UI（适应不同窗口宽度）
+- 数据持久化（保存到文件）
