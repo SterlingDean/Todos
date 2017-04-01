@@ -21,14 +21,15 @@
         <ScrollViewer Grid.Row="1"
                       HorizontalAlignment="Stretch">
             <StackPanel HorizontalAlignment="Center">
-                <Image x:Name="ItemImage"
+                <Image x:Name="Picture"
                        Source="Assets/background.jpg"
                        Width="300" />
-                <AppBarButton x:Name="SelectAppBarButton"
+                <AppBarButton x:Name="SelectPictureAppBarButton"
                               HorizontalAlignment="Right"
                               Icon="Pictures"
                               IsCompact="True"
-                              Label="Select">
+                              Label="Select"
+                              Click="SelectPictureAppBarButton_Click">
                 </AppBarButton>
                 <TextBox x:Name="TitleTextBox"
                          Header="Title"

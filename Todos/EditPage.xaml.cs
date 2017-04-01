@@ -7,6 +7,9 @@ using System.Text;
 using Todos.Models;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -14,6 +17,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -49,6 +53,38 @@ namespace Todos {
             CreateButton.Content = "Update";
         }
 
+        private async void SelectPictureAppBarButton_Click(object sender, RoutedEventArgs e) {
+            // Set up the file picker.
+            FileOpenPicker openPicker = new FileOpenPicker();
+            openPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            openPicker.ViewMode = PickerViewMode.Thumbnail;
+
+            // Filter to include a sample subset of file types.
+            openPicker.FileTypeFilter.Clear();
+            openPicker.FileTypeFilter.Add(".bmp");
+            openPicker.FileTypeFilter.Add(".png");
+            openPicker.FileTypeFilter.Add(".jpeg");
+            openPicker.FileTypeFilter.Add(".jpg");
+
+            // Open the file picker.
+            StorageFile file = await openPicker.PickSingleFileAsync();
+
+            // 'file' is null if user cancels the file picker.
+            if (file != null) {
+                // Open a stream for the selected file.
+                // The 'using' block ensures the stream is disposed
+                // after the image is loaded.
+                using (IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read)) {
+                    // Set the image source to the selected bitmap.
+                    BitmapImage bitmapImage = new BitmapImage();
+                    bitmapImage.SetSource(fileStream);
+                    Picture.Source = bitmapImage;
+                    clickedItem.PictureSource = bitmapImage;
+                }
+            }
+
+        }
+
         private async void CreateButton_Click(object sender, RoutedEventArgs e) {
             if ((sender as Button).Content.Equals("Create")) {  // Create Todo Item
                 // 检查用户输入是否合法
@@ -71,7 +107,7 @@ namespace Todos {
                     await new Windows.UI.Popups.MessageDialog(warningMessage) { Title = "Warning" }.ShowAsync();
                 }
             } else {  // Update Todo Item
-
+                clickedItem.Title = TitleTextBox.Text.ToString();
                 (sender as Button).Content = "Create";
             }
             this.Frame.GoBack();

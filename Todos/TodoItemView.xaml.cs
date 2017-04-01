@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -26,8 +27,8 @@ namespace Todos {
 
             tdvm = new TodoItemViewModel();
             // 测试用例
-            tdvm.Create("完成作业", "UWP HW", DateTime.Today);
-            tdvm.Create("健身", "学校健身房", DateTime.Today);
+            tdvm.Create(new BitmapImage(new Uri("ms-appx:///Assets/background.jpg")), "完成作业", "UWP HW", DateTime.Today);
+            tdvm.Create(new BitmapImage(new Uri("ms-appx:///Assets/background.jpg")), "健身", "学校健身房", DateTime.Today);
         }
 
         private void TodoItemCheckBox_Click(object sender, RoutedEventArgs e) {

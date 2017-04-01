@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Todos.Models {
     class TodoItem : INotifyPropertyChanged {
@@ -18,6 +20,19 @@ namespace Todos.Models {
                 PropertyChangedEventHandler handler = PropertyChanged;
                 if (handler != null) {
                     handler.Invoke(this, new PropertyChangedEventArgs(nameof(IsChecked)));
+                }
+            }
+        }
+
+        private ImageSource pictureSource;
+
+        public ImageSource PictureSource {
+            get { return pictureSource; }
+            set {
+                pictureSource = value;
+                PropertyChangedEventHandler handler = PropertyChanged;
+                if (handler != null) {
+                    handler.Invoke(this, new PropertyChangedEventArgs(nameof(PictureSource)));
                 }
             }
         }
@@ -61,8 +76,9 @@ namespace Todos.Models {
             }
         }
 
-        public TodoItem(string title, string details, DateTime dueDate) {
+        public TodoItem(BitmapImage pictureSource, string title, string details, DateTime dueDate) {
             IsChecked = 0;
+            PictureSource = pictureSource;
             Title = title;
             Details = details;
             DueDate = dueDate;

@@ -26,8 +26,9 @@
                               VerticalAlignment="Center"
                               Click="TodoItemCheckBox_Click"/>
 
-                    <Image Grid.Column="1"
-                           Source="Assets/background.jpg"
+                    <Image x:Name="Picture"
+                           Grid.Column="1"
+                           Source="{x:Bind PictureSource, Mode=OneWay}"
                            Margin="0, 0, 20, 0"/>
 
                     <TextBlock Grid.Column="2"
