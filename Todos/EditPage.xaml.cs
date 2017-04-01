@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using Todos.Models;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
@@ -26,6 +27,8 @@ namespace Todos {
             this.InitializeComponent();
         }
 
+        private TodoItem clickedItem;
+
         protected override void OnNavigatedTo(NavigationEventArgs e) {
             // 设置返回箭头
             if (this.Frame.CanGoBack) {
@@ -39,29 +42,39 @@ namespace Todos {
             }
 
             // 点击Todo Item进入时
-
+            clickedItem = e.Parameter as TodoItem;
+            TitleTextBox.Text = clickedItem.Title;
+            DetailsTextBox.Text = clickedItem.Details;
+            DueDateDatePicker.Date = clickedItem.DueDate;
+            CreateButton.Content = "Update";
         }
 
-        private void CreateButton_Click(object sender, RoutedEventArgs e) {
-            // 检查用户输入是否合法
-            StringBuilder temp = new StringBuilder();
-            if (TitleTextBox.Text == "") {
-                temp.Append("The title cannot be empty.\n");
-            }
-            if (DetailsTextBox.Text == "") {
-                temp.Append("The details cannot be empty.\n");
-            }
-            if (DueDateDatePicker.Date.CompareTo(DateTime.Today) < 0) {
-                temp.Append("The due date cannot be earlier than today.\n");
-            }
-            string warningMessage = temp.ToString();
-            if (warningMessage.Equals("")) {
-                // 合法，创建Todo Item
-                
-            } else {
-                // 不合法，弹出警告消息对话框
+        private async void CreateButton_Click(object sender, RoutedEventArgs e) {
+            if ((sender as Button).Content.Equals("Create")) {  // Create Todo Item
+                // 检查用户输入是否合法
+                StringBuilder temp = new StringBuilder();
+                if (TitleTextBox.Text == "") {
+                    temp.Append("The title cannot be empty.\n");
+                }
+                if (DetailsTextBox.Text == "") {
+                    temp.Append("The details cannot be empty.\n");
+                }
+                if (DueDateDatePicker.Date.CompareTo(DateTime.Today) < 0) {
+                    temp.Append("The due date cannot be earlier than today.\n");
+                }
+                string warningMessage = temp.ToString();
+                if (warningMessage.Equals("")) {
+                    // 合法，创建Todo Item
 
+                } else {
+                    // 不合法，弹出警告消息对话框
+                    await new Windows.UI.Popups.MessageDialog(warningMessage) { Title = "Warning" }.ShowAsync();
+                }
+            } else {  // Update Todo Item
+
+                (sender as Button).Content = "Create";
             }
+            this.Frame.GoBack();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e) {

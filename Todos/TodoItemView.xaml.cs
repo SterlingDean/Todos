@@ -23,7 +23,7 @@ namespace Todos {
 
         public TodoItemView() {
             this.InitializeComponent();
-            
+
             tdvm = new TodoItemViewModel();
             // 测试用例
             tdvm.Create("完成作业", "UWP HW", DateTime.Today);
