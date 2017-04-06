@@ -48,7 +48,6 @@
 
                     <AppBarButton Grid.Column="3"
                                   Icon="Setting"
-                                  Label="Options"
                                   IsCompact="True"
                                   VerticalAlignment="Center">
                         <AppBarButton.Flyout>

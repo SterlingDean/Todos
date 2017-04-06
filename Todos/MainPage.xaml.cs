@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Todos.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
@@ -26,6 +27,8 @@ namespace Todos
         public MainPage()
         {
             this.InitializeComponent();
+
+            tdvm = App.tdvm;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e) {
@@ -37,6 +40,12 @@ namespace Todos
 
         private void AddAppBarButton_Click(object sender, RoutedEventArgs e) {
             this.Frame.Navigate(typeof(EditPage));
+        }
+        private TodoItemViewModel tdvm;
+
+        private async void SearchButton_Click(object sender, RoutedEventArgs e) {
+            string result = tdvm.Search(SearchTextBox.Text.ToString());
+            await new Windows.UI.Popups.MessageDialog(result) { Title = "Result" }.ShowAsync();
         }
     }
 }
