@@ -8,8 +8,10 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Todos.Models {
-    class TodoItem : INotifyPropertyChanged {
+    public class TodoItem : INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public int Id { get; set; }
 
         private double isChecked;
 
@@ -24,9 +26,9 @@ namespace Todos.Models {
             }
         }
 
-        private ImageSource pictureSource;
+        private BitmapImage pictureSource;
 
-        public ImageSource PictureSource {
+        public BitmapImage PictureSource {
             get { return pictureSource; }
             set {
                 pictureSource = value;

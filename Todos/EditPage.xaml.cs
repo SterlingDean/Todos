@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using Todos.Models;
+using Todos.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -27,8 +28,12 @@ namespace Todos {
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
     public sealed partial class EditPage : Page {
+        private TodoItemViewModel tdvm;
+
         public EditPage() {
             this.InitializeComponent();
+
+            tdvm = App.tdvm;
         }
 
         private TodoItem clickedItem;
@@ -44,49 +49,46 @@ namespace Todos {
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
                     AppViewBackButtonVisibility.Collapsed;
             }
-
+            
             // 点击Todo Item进入时
-            clickedItem = e.Parameter as TodoItem;
-            TitleTextBox.Text = clickedItem.Title;
-            DetailsTextBox.Text = clickedItem.Details;
-            DueDateDatePicker.Date = clickedItem.DueDate;
-            CreateButton.Content = "Update";
+            if (e.Parameter != null) {
+                clickedItem = e.Parameter as TodoItem;
+                Picture.Source = clickedItem.PictureSource;
+                TitleTextBox.Text = clickedItem.Title;
+                DetailsTextBox.Text = clickedItem.Details;
+                DueDateDatePicker.Date = clickedItem.DueDate;
+                CreateButton.Content = "Update";
+            }
         }
 
+        private BitmapImage selectedPicture;
         private async void SelectPictureAppBarButton_Click(object sender, RoutedEventArgs e) {
-            // Set up the file picker.
             FileOpenPicker openPicker = new FileOpenPicker();
             openPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
             openPicker.ViewMode = PickerViewMode.Thumbnail;
-
-            // Filter to include a sample subset of file types.
+            
             openPicker.FileTypeFilter.Clear();
             openPicker.FileTypeFilter.Add(".bmp");
             openPicker.FileTypeFilter.Add(".png");
             openPicker.FileTypeFilter.Add(".jpeg");
             openPicker.FileTypeFilter.Add(".jpg");
+            
+            StorageFile pictureFile = await openPicker.PickSingleFileAsync();
+            
+            if (pictureFile != null) {
+                var destFile = await pictureFile.CopyAsync(ApplicationData.Current.LocalFolder, pictureFile.Name, NameCollisionOption.ReplaceExisting);
+                selectedPicture = new BitmapImage(new Uri(new Uri("ms-appdata:///local/"), destFile.Name));
 
-            // Open the file picker.
-            StorageFile file = await openPicker.PickSingleFileAsync();
-
-            // 'file' is null if user cancels the file picker.
-            if (file != null) {
-                // Open a stream for the selected file.
-                // The 'using' block ensures the stream is disposed
-                // after the image is loaded.
-                using (IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read)) {
-                    // Set the image source to the selected bitmap.
-                    BitmapImage bitmapImage = new BitmapImage();
-                    bitmapImage.SetSource(fileStream);
-                    Picture.Source = bitmapImage;
-                    clickedItem.PictureSource = bitmapImage;
+                using (IRandomAccessStream fileStream = await pictureFile.OpenAsync(FileAccessMode.Read)) {
+                    Picture.Source = selectedPicture;
+                    if (clickedItem != null) clickedItem.PictureSource = selectedPicture;
                 }
             }
 
         }
 
         private async void CreateButton_Click(object sender, RoutedEventArgs e) {
-            if ((sender as Button).Content.Equals("Create")) {  // Create Todo Item
+            if ((sender as Button).Content.Equals("Create")) {  // 添加Todo Item
                 // 检查用户输入是否合法
                 StringBuilder temp = new StringBuilder();
                 if (TitleTextBox.Text == "") {
@@ -101,16 +103,17 @@ namespace Todos {
                 string warningMessage = temp.ToString();
                 if (warningMessage.Equals("")) {
                     // 合法，创建Todo Item
-
+                    tdvm.Create((BitmapImage)Picture.Source, TitleTextBox.Text.ToString(), DetailsTextBox.Text.ToString(), DueDateDatePicker.Date.DateTime);
+                    this.Frame.GoBack();
                 } else {
                     // 不合法，弹出警告消息对话框
                     await new Windows.UI.Popups.MessageDialog(warningMessage) { Title = "Warning" }.ShowAsync();
                 }
-            } else {  // Update Todo Item
-                clickedItem.Title = TitleTextBox.Text.ToString();
+            } else {  // 更新Todo Item
+                tdvm.Update(clickedItem, selectedPicture, TitleTextBox.Text.ToString(), DetailsTextBox.Text.ToString(), DueDateDatePicker.Date.DateTime);
                 (sender as Button).Content = "Create";
+                this.Frame.GoBack();
             }
-            this.Frame.GoBack();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e) {

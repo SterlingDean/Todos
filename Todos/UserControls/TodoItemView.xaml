@@ -54,7 +54,8 @@
                         <AppBarButton.Flyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem x:Name="DeleteMenuFlyoutItem"
-                                                Text="Delete" />
+                                                Text="Delete"
+                                                Click="DeleteMenuFlyoutItem_Click"/>
                             </MenuFlyout>
                         </AppBarButton.Flyout>
                     </AppBarButton>

@@ -20,15 +20,15 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Todos {
     public sealed partial class TodoItemView : UserControl {
-        private TodoItemViewModel tdvm;
+        public TodoItemViewModel tdvm { get; set; }
 
         public TodoItemView() {
             this.InitializeComponent();
 
-            tdvm = new TodoItemViewModel();
-            // 测试用例
-            tdvm.Create(new BitmapImage(new Uri("ms-appx:///Assets/background.jpg")), "完成作业", "UWP HW", DateTime.Today);
-            tdvm.Create(new BitmapImage(new Uri("ms-appx:///Assets/background.jpg")), "健身", "学校健身房", DateTime.Today);
+            tdvm = App.tdvm;
+            //// 测试用例
+            //tdvm.Create(new BitmapImage(new Uri("ms-appx:///Assets/background.jpg")), "完成作业", "UWP HW", DateTime.Today);
+            //tdvm.Create(new BitmapImage(new Uri("ms-appx:///Assets/background.jpg")), "健身", "学校健身房", DateTime.Today);
         }
 
         private void TodoItemCheckBox_Click(object sender, RoutedEventArgs e) {
@@ -39,6 +39,11 @@ namespace Todos {
         private void ListView_ItemClick(object sender, ItemClickEventArgs e) {
             Frame rootFrame = Window.Current.Content as Frame;
             rootFrame.Navigate(typeof(EditPage), e.ClickedItem);
+        }
+
+        private void DeleteMenuFlyoutItem_Click(object sender, RoutedEventArgs e) {
+            dynamic item = e.OriginalSource;
+            tdvm.Delete(item.DataContext);
         }
     }
 }
