@@ -28,7 +28,7 @@ namespace Todos {
         /// </summary>
 
         public static TodoItemViewModel tdvm { get; set; }
-
+        
         public App() {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
@@ -36,6 +36,21 @@ namespace Todos {
             LoadDatabase();
             tdvm = new TodoItemViewModel();
         }
+
+        public static SQLiteConnection conn { get; set; }
+        private void LoadDatabase() {
+            conn = new SQLiteConnection("todoitems.db");
+            using (var stmt = conn.Prepare(@"CREATE TABLE IF NOT EXISTS
+                                             TodoItems (Id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                                                        PictureUri VARCHAR(300),
+                                                        Title VARCHAR(100),
+                                                        Details VARCHAR(300),
+                                                        DueDate VARCHAR(20)
+                                                       );")) {
+                stmt.Step();
+            }
+        }
+
 
         /// <summary>
         /// 在应用程序由最终用户正常启动时进行调用。
@@ -107,21 +122,6 @@ namespace Todos {
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: 保存应用程序状态并停止任何后台活动
             deferral.Complete();
-        }
-
-        public static SQLiteConnection conn { get; set; }
-
-        private void LoadDatabase() {
-            conn = new SQLiteConnection("todoitems.db");
-            using (var stmt = conn.Prepare(@"CREATE TABLE IF NOT EXISTS
-                                             TodoItems (Id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                                                        PictureUri VARCHAR(300),
-                                                        Title VARCHAR(100),
-                                                        Details VARCHAR(300),
-                                                        DueDate VARCHAR(20)
-                                                       );")) {
-                stmt.Step();
-            }
         }
     }
 }

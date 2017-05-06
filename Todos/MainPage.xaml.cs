@@ -44,8 +44,11 @@ namespace Todos
         private TodoItemViewModel tdvm;
 
         private async void SearchButton_Click(object sender, RoutedEventArgs e) {
-            string result = tdvm.Search(SearchTextBox.Text.ToString());
-            await new Windows.UI.Popups.MessageDialog(result) { Title = "Result" }.ShowAsync();
+            string keyword = SearchTextBox.Text.ToString();
+            if (!keyword.Equals("")) {
+                string result = tdvm.Search(keyword);
+                await new Windows.UI.Popups.MessageDialog(result) { Title = "Result" }.ShowAsync();
+            }
         }
     }
 }

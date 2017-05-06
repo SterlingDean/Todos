@@ -62,6 +62,7 @@ namespace Todos {
         }
 
         private BitmapImage selectedPicture;
+
         private async void SelectPictureAppBarButton_Click(object sender, RoutedEventArgs e) {
             FileOpenPicker openPicker = new FileOpenPicker();
             openPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
@@ -76,7 +77,8 @@ namespace Todos {
             StorageFile pictureFile = await openPicker.PickSingleFileAsync();
             
             if (pictureFile != null) {
-                var destFile = await pictureFile.CopyAsync(ApplicationData.Current.LocalFolder, pictureFile.Name, NameCollisionOption.ReplaceExisting);
+                var destFile = await pictureFile.CopyAsync(
+                    ApplicationData.Current.LocalFolder, pictureFile.Name, NameCollisionOption.ReplaceExisting);
                 selectedPicture = new BitmapImage(new Uri(new Uri("ms-appdata:///local/"), destFile.Name));
 
                 using (IRandomAccessStream fileStream = await pictureFile.OpenAsync(FileAccessMode.Read)) {
@@ -84,7 +86,6 @@ namespace Todos {
                     if (clickedItem != null) clickedItem.PictureSource = selectedPicture;
                 }
             }
-
         }
 
         private async void CreateButton_Click(object sender, RoutedEventArgs e) {
